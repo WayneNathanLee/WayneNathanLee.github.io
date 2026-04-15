@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Eggbert | Blooma Games</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Eggbert is a wobbly precision platformer from Blooma Games. Roll, crack, repeat. Wishlist on Steam." />
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg2: #121a31;
+      --panel: rgba(255,255,255,0.06);
+      --panel-border: rgba(255,255,255,0.12);
+      --text: #f4f7fb;
+      --muted: #b8c0d4;
+      --accent: #ffd54a;
+      --accent-2: #ff9f43;
+      --accent-dark: #1a1a1a;
+      --max: 1120px;
+      --radius: 20px;
+      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(70,120,255,0.22), transparent 35%),
+        radial-gradient(circle at top right, rgba(255,170,60,0.16), transparent 30%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+      line-height: 1.55;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+      border-radius: 16px;
+    }
+
+    .container {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(11, 16, 32, 0.72);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 14px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .brand-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #111;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      box-shadow: 0 8px 22px rgba(255, 180, 50, 0.25);
+    }
+
+    .nav {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav a {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .nav a:hover {
+      color: var(--text);
+    }
+
+    .hero {
+      padding: 72px 0 48px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.92rem;
+      color: var(--accent);
+      background: rgba(255, 213, 74, 0.08);
+      border: 1px solid rgba(255, 213, 74, 0.16);
+      padding: 8px 14px;
+      border-radius: 999px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2.8rem, 6vw, 5.2rem);
+      line-height: 0.95;
+      letter-spacing: -1.8px;
+    }
+
+    .hero p.lead {
+      margin: 0 0 26px;
+      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+      color: var(--muted);
+      max-width: 620px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 0 22px;
+      border-radius: 14px;
+      font-weight: 700;
+      border: 1px solid transparent;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #101010;
+      box-shadow: 0 16px 35px rgba(255, 181, 65, 0.28);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 40px rgba(255, 181, 65, 0.34);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.12);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--muted);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+    }
+
+    .hero-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid var(--panel-border);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card img {
+      border-radius: 0;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+    }
+
+    .hero-card-caption {
+      padding: 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .section {
+      padding: 30px 0 24px;
+    }
+
+    .section-title {
+      margin: 0 0 18px;
+      font-size: clamp(1.6rem, 2vw, 2.2rem);
+      letter-spacing: -0.6px;
+    }
+
+    .section-intro {
+      margin: 0 0 24px;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .feature {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .feature h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+    }
+
+    .feature p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .media-card {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .media-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .trailer-wrap {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .trailer-wrap iframe {
+      width: 100%;
+      height: 620px;
+      border: 0;
+      display: block;
+    }
+
+    .cta {
+      margin: 34px 0 60px;
+      background: linear-gradient(135deg, rgba(255,213,74,0.12), rgba(255,159,67,0.08));
+      border: 1px solid rgba(255,213,74,0.18);
+      border-radius: 26px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .cta-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .cta h2 {
+      margin: 0 0 6px;
+      font-size: clamp(1.5rem, 2vw, 2.1rem);
+    }
+
+    .cta p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    footer {
+      padding: 26px 0 42px;
+      color: var(--muted);
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .feature-grid,
+      .media-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .trailer-wrap iframe {
+        height: 420px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .hero {
+        padding-top: 42px;
+      }
+
+      .hero-grid,
+      .feature-grid,
+      .media-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+      }
+
+      .nav {
+        gap: 12px;
+      }
+
+      .trailer-wrap iframe {
+        height: 260px;
+      }
+
+      .cta {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="brand-badge">B</div>
+        <div>Blooma Games</div>
+      </div>
+      <nav class="nav">
+        <a href="#about">About</a>
+        <a href="#screenshots">Screenshots</a>
+        <a href="#trailer">Trailer</a>
+        <a href="https://store.steampowered.com/app/YOUR_STEAM_ID" target="_blank">Steam</a>
+      </nav>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow">Coming Soon • Precision Platformer</div>
+        <h1>Eggbert</h1>
+        <p class="lead">
+          A wobbly egg on a deadly journey. Roll, crack, repeat as you balance, bounce and survive your way through a world built to break you.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://store.steampowered.com/app/YOUR_STEAM_ID" target="_blank">
+            Wishlist on Steam
+          </a>
+          <a class="btn btn-secondary" href="#trailer">
+            Watch Trailer
+          </a>
+        </div>
+
+        <div class="hero-meta">
+          <div class="chip">Single-player</div>
+          <div class="chip">Physics-based</div>
+          <div class="chip">Precision platforming</div>
+          <div class="chip">From Blooma Games</div>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <img src="YOUR_HERO_IMAGE.jpg" alt="Eggbert gameplay hero image">
+        <div class="hero-card-caption">
+          One bad bounce and you are straight back to the start.
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section" id="about">
+    <div class="container">
+      <h2 class="section-title">Roll. Crack. Repeat.</h2>
+      <p class="section-intro">
+        Eggbert is about timing, balance and keeping your nerve. Every section is a test of control. Every mistake hurts. Every success feels earned.
+      </p>
+
+      <div class="feature-grid">
+        <div class="feature">
+          <h3>Precision movement</h3>
+          <p>Master awkward momentum, tight jumps and brutal recoveries.</p>
+        </div>
+        <div class="feature">
+          <h3>High stakes</h3>
+          <p>One mistake can send you right back, so every section matters.</p>
+        </div>
+        <div class="feature">
+          <h3>Practice mode</h3>
+          <p>Drop checkpoints anywhere and learn the hardest sections properly.</p>
+        </div>
+        <div class="feature">
+          <h3>Distinct worlds</h3>
+          <p>Travel through playful rooms, slippery slopes and surreal obstacle runs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="screenshots">
+    <div class="container">
+      <h2 class="section-title">Screenshots</h2>
+      <p class="section-intro">
+        Swap these placeholder files for your real Eggbert screenshots once the page is live.
+      </p>
+
+      <div class="media-grid">
+        <div class="media-card">
+          <img src="SCREENSHOT-1.jpg" alt="Eggbert screenshot 1">
+        </div>
+        <div class="media-card">
+          <img src="SCREENSHOT-2.jpg" alt="Eggbert screenshot 2">
+        </div>
+        <div class="media-card">
+          <img src="SCREENSHOT-3.jpg" alt="Eggbert screenshot 3">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="trailer">
+    <div class="container">
+      <h2 class="section-title">Trailer</h2>
+      <p class="section-intro">
+        Put your YouTube trailer here. If you do not have a final trailer yet, use your best gameplay clip for now.
+      </p>
+
+      <div class="trailer-wrap">
+        <iframe
+          src="https://www.youtube.com/embed/YOUR_YOUTUBE_VIDEO_ID"
+          title="Eggbert Trailer"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="cta">
+        <div class="cta-inner">
+          <div>
+            <h2>Wishlist Eggbert on Steam</h2>
+            <p>Support the game early and follow development from Blooma Games.</p>
+          </div>
+          <a class="btn btn-primary" href="https://store.steampowered.com/app/YOUR_STEAM_ID" target="_blank">
+            Open Steam Page
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>© Blooma Games</div>
+      <div>
+        <a href="mailto:hello@bloomagames.com">hello@bloomagames.com</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
